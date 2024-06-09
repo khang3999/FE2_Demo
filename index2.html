@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FE2 | FIT-TDC 2024</title>
+    <link rel="stylesheet" href="public/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/assets/font/bootstrap-icons.min.css">
+    <style>
+        body { background: #000;}
+        .canvas {
+            perspective: 500px;
+            position: fixed;
+            inset: 0;
+        }
+        .gallery {
+            position: fixed;
+            inset: 0;
+            transform-style: preserve-3d;
+            transition: .5s ease-out;
+        }
+        .gallery-bg {
+            background: url(public/images/background.jpg);
+            background-size: cover;
+            position: fixed;
+            inset: -20%;
+            transition: .5s ease-out;
+        }
+        .pic {
+            width: 100px;
+            position: fixed;
+            box-shadow: 0 0 20px #000;
+            transition: .5s;
+            cursor: pointer;
+
+        }
+        .pic .img {
+            width: 100px;
+            height: 80px;
+            background: #fff;
+        }
+        .pic:hover {
+            box-shadow: 0 0 20px yellow;
+            z-index: 100;
+            transform: translateZ(250px) !important;
+            filter: brightness(100%) !important;
+        }
+        .control {
+            padding: 5px;
+            font-size: .5em;
+            color: #fff;
+            background: rgba(0, 0, 0, .5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="canvas">
+        <div class="gallery-bg"></div>
+        <div class="gallery"></div>
+    </div>
+    <script>
+        const gallery = document.querySelector('.gallery');
+        const galleryBg = document.querySelector('.gallery-bg');
+        const canvas = document.querySelector('.canvas');
+
+        const arrRate = [];
+        for (let i = 0; i < 20; i++) {
+            arrRate.push(Math.random());
+        }
+        arrRate.sort(function(a, b){return a - b});
+        arrRate.forEach(element => {
+            const pic = document.createElement('div');
+            pic.classList.add('pic');
+            pic.style.top = getRandomIntInclusive(25, 65) + '%';
+            pic.style.left = getRandomIntInclusive(25, 65) + '%';
+
+            pic.style.transform = `translateZ(${250 * element}px)`;
+            pic.style.filter = `brightness(${150 * element}%)`;
+            pic.innerHTML = `<div class="img"></div>`;
+            pic.innerHTML += `<div class="control"><i class="bi bi-heart-fill"></i> 0</div>`;
+            gallery.append(pic);
+        });
+
+        const halfWidth = window.innerWidth / 2;
+        const halfHeight = window.innerHeight / 2;
+        canvas.addEventListener('mousemove', function (e) {
+            const rateX = (e.clientX / halfWidth - 1) * -1;
+            const rateY = (e.clientY / halfHeight - 1);
+            
+            gallery.style.transform = `rotateY(${30 * rateX}deg) rotateX(${30 * rateY}deg)`;
+            galleryBg.style.transform = `rotateY(${5 * rateX}deg) rotateX(${5 * rateY}deg)`;
+        });
+
+        function getRandomIntInclusive(min, max) {
+            const minCeiled = Math.ceil(min);
+            const maxFloored = Math.floor(max);
+            return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
+        }
+
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+    </script>
+</body>
+
+</html>
